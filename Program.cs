@@ -1,18 +1,30 @@
 ﻿public abstract class Delivery
 {
-    public string DeliveryAddress;
     public int DeliveryId;
-    public string DeliverySumm;
-    public bool IsDelPaied;
-    public bool IsPOSNeeded;
+    public DateTime DeliveryOpenDate;
+    public DateTime DeliveryDateTime;
+    public Client Client;
+    public string DeliveryAddress;
+    public int DeliveryAmount;
+    public string DeliverySummPaied;
+    public bool IsDelFullyPaied;
+
+    public string DeliveryDescription;
+    public DateTime DeliveryCloseDate;
+
+
 }
 
 public class Payment
 {
     public string Currency;
-    public string Balance;
-    public string Fee;
-    public int OrderSumm;
+    public int PaiedSummOfOrder;
+    public int OrderSumm; 
+    public PaymentMethod PaymentMethod;
+    public DateTime PaymentDateTime;
+    public int PaymentAmount;
+    public int PaymentDocNumber;
+    public int Balance;
 }
 
 abstract public class Person
@@ -56,7 +68,9 @@ public class Staff : Human
     public DateOnly HareDate;
     public DateOnly RetaingDate;
     public int StaffIDNumber;
+    public byte Salary;
 }
+
 public class Client : Person
 {
     public string ClientID;
@@ -66,14 +80,95 @@ public class Client : Person
     public string CompanyClientAccountName;
     public DateTime CompanyClientAccOpenDate;
 }
+
+public class Partners : Company
+{
+    public int PartnerIDNumber;
+    public int ContractIDNumber;
+    public DateOnly ContractDate;
+    public DateOnly ContractCloseDate;
+    public int PartnerFee;
+}
+
+public class Curiers : Partners
+{
+    public int CuriersIDNumber;
+    public DateTime CuriersDateContract;
+    public DateTime CuriersCloseDateContract;
+    public int CuriersFeeContract;
+    public byte CuriersBalanceContract;
+    public int CuriersOrdersQountity;
+    public byte CurierRating;
+    public string CurierDescription;
+}
+
+public abstract class Account
+{
+    public string AccountID;
+    public string AccountName;
+    public string AccountDescription;
+    public string AccountType;
+    public int AccountCurrency;
+    public int AccountBalance;
+    public DateTime AccountOpenDate;
+    public DateTime AccountCloseDate;
+}
+
+public enum PaymentMethod
+{
+    cash,
+    card,
+    wire
+}
+
+public enum FiatCurrency
+{
+    usd,
+    byr,
+    ryb,
+    euro,
+    chif,
+    pound
+
+}
+public enum CryptoCurrency
+{
+    bitcoin,
+    manero,
+    bnb,
+    Etherium
+
+}
+
+//класс счета в компании абстрактный реализовать
+
 class HomeDelivery : Delivery
 {
     /* ... */
+    public Curiers Curier;
+    public TimeOnly ClientWishTimeFrom;
+    public TimeOnly ClientWishTimeTo;
+    public bool IsPOSNeeded;
+    public int EnterenceCode;
+    public byte Floor;
+    public bool IsLift;
+    public byte AmountOfDeliveryTry;
+
+
 }
 
 class PickPointDelivery : Delivery
 {
     /* ... */
+    Partners PickPointPartner;
+    public string PickPointName;
+    public string PickPointDescription;
+    public string PickPointAdress;
+    public TimeOnly PickPointOpenDate;
+    public TimeOnly PickPointCloseDate;
+    public DateTime DeliveredToPickPoint;
+    public DateTime TakeParcelDeadLine;
+    public DateTime ReturnFromPickPoint;
 }
 
 class ShopDelivery : Delivery
