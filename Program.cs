@@ -141,7 +141,7 @@ public class FiatCurrency : Currency
 
 public class CryptoCurrency : Currency
 {
-    public enum CryptoCurrency
+    public enum CryptoCurrencyEnum
     {
         bitcoin,
         manero,
@@ -153,7 +153,7 @@ public class CryptoCurrency : Currency
 
 public class ElectronicCurrency : Currency
 {
-    public enum ElectronicCurrency
+    public enum ElectronicCurrencyEnum
     {
         webmoney,
         yandexmoney,
@@ -202,9 +202,7 @@ public class Order<TDelivery, TStruct> where TDelivery : Delivery
 
     public int OrderNumber;
 
-    public string Description;
-
-    public void DisplayAddress()
+        public void DisplayAddress()
     {
         Console.WriteLine(Delivery.DeliveryAddress);
     }
@@ -218,7 +216,7 @@ public class Order<TDelivery, TStruct> where TDelivery : Delivery
 
 
 }
-// расписать ниже как в book индексаторе
+// расписать ниже как в book индексаторе, а так же можно добавить классы для адреса и мобильного телефона
 public class Product
 {
     public int ProductID;
