@@ -1,4 +1,6 @@
-﻿public abstract class Delivery
+﻿namespace InternetShop
+{
+public abstract class Delivery
 {
     public int DeliveryId;
     public DateTime DeliveryOpenDate;
@@ -202,7 +204,7 @@ public class Order<TDelivery, TStruct> where TDelivery : Delivery
 
     public int OrderNumber;
 
-        public void DisplayAddress()
+    public void DisplayAddress()
     {
         Console.WriteLine(Delivery.DeliveryAddress);
     }
@@ -228,4 +230,5 @@ public class Product
     public int ProductCategoryName;
     public int ProductCategoryDescription;
     public int ProductPrice;
+}
 }
