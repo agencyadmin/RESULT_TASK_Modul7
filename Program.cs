@@ -8,7 +8,7 @@
     public int DeliveryAmount;
     public string DeliverySummPaied;
     public bool IsDelFullyPaied;
-
+    public Currency OrderCurrency;
     public string DeliveryDescription;
     public DateTime DeliveryCloseDate;
 
@@ -17,14 +17,14 @@
 
 public class Payment
 {
-    public string Currency;
+    public Currency PaymentCurrency;
     public int PaiedSummOfOrder;
-    public int OrderSumm; 
+    public int OrderSumm;
     public PaymentMethod PaymentMethod;
     public DateTime PaymentDateTime;
     public int PaymentAmount;
     public int PaymentDocNumber;
-    public int Balance;
+    public int OrderPaymentBalance;
 }
 
 abstract public class Person
@@ -59,8 +59,6 @@ public class Company : Person
     public string BankAdress;
     public int VATNumber;
     public string RegistrationNumber;
-
-
 }
 
 public class Staff : Human
@@ -121,27 +119,49 @@ public enum PaymentMethod
     wire
 }
 
-public enum FiatCurrency
-{
-    usd,
-    byr,
-    ryb,
-    euro,
-    chif,
-    pound
+public abstract class Currency
+{ //что то тут дописать что бы карренси агрегировал фиатные карренси , крипто карренси, электронные деньги.
 
-}
-public enum CryptoCurrency
-{
-    bitcoin,
-    manero,
-    bnb,
-    Etherium
 
 }
 
-//класс счета в компании абстрактный реализовать
+public class FiatCurrency : Currency
+{
+    public enum FiatCurrencyEnum
+    {
+        usd,
+        byr,
+        ryb,
+        euro,
+        chif,
+        pound
 
+    }
+}
+
+public class CryptoCurrency : Currency
+{
+    public enum CryptoCurrency
+    {
+        bitcoin,
+        manero,
+        bnb,
+        Etherium
+
+    }
+}
+
+public class ElectronicCurrency : Currency
+{
+    public enum ElectronicCurrency
+    {
+        webmoney,
+        yandexmoney,
+        manymailru,
+        qiwi
+
+    }
+}
 class HomeDelivery : Delivery
 {
     /* ... */
