@@ -1,6 +1,10 @@
 ﻿public abstract class Delivery
 {
-    public string Address;
+    public string DeliveryAddress;
+    public int DeliveryId;
+    public string DeliverySumm;
+    public bool IsDelPaied;
+    public bool IsPOSNeeded;
 }
 
 public class Payment
@@ -14,8 +18,13 @@ public class Payment
 abstract public class Person
 {
     public string Name;
-    public string ResidanceAdress;
+    public string ResidenceAdress;
     public byte PhoneNumber;
+    public string DocName;
+    public string DocNumber;
+    public DateOnly DocIssueDate;
+    public string WhoIssueDoc;
+
 }
 
 public class Human : Person
@@ -23,22 +32,40 @@ public class Human : Person
     public string SurName;
     public string FatherName;
     public DateOnly Birthday;
+    public bool IsMarried;
+    public byte ChildrenQuantity;
 }
 
 public class Company : Person
 {
+    public Human Director;
+    public Human Accounter;
+    public string BranchAdress;
+    public string Accoutnumber;
+    public string AccountBank;
+    public string BankCorrespondent;
+    public string BankAdress;
+    public int VATNumber;
+    public string RegistrationNumber;
+
 
 }
-abstract class Client : Person
+
+public class Staff : Human
 {
-    public string ID;
-    public string Name;
-    public string ResidenceAddress;
-    public string DocNumber;
-    public DateOnly DocIssueDate;
-    public string DocName;
+    public DateOnly HareDate;
+    public DateOnly RetaingDate;
+    public int StaffIDNumber;
 }
-
+public class Client : Person
+{
+    public string ClientID;
+    private int CompanyClientAccountNumber;
+    private int CompanyClientAccountBalance;
+    public string CompanyClientAccountCurrency;
+    public string CompanyClientAccountName;
+    public DateTime CompanyClientAccOpenDate;
+}
 class HomeDelivery : Delivery
 {
     /* ... */
@@ -54,20 +81,37 @@ class ShopDelivery : Delivery
     /* ... */
 }
 
-class Order<TDelivery, TStruct> where TDelivery : Delivery
+public class Order<TDelivery, TStruct> where TDelivery : Delivery
 {
     public TDelivery Delivery;
 
-    public int Number;
+    public int OrderNumber;
 
     public string Description;
 
     public void DisplayAddress()
     {
-        Console.WriteLine(Delivery.Address);
+        Console.WriteLine(Delivery.DeliveryAddress);
     }
 
     // ... Другие поля
     public DateTime OrderDateTime;
-    public Staff;
+    public Staff WhoTakeOrder;
+    public bool IsDelivered;
+    public bool IsGivenToCurrier;
+    public Product[] OrderGoods;
+
+
+}
+// расписать ниже как в book индексаторе
+public class Product
+{
+    public int ProductID;
+    public string ProductName;
+    public string ProductDescription;
+    public string ProductCategory;
+    public int ProductCategoryID;
+    public int ProductCategoryName;
+    public int ProductCategoryDescription;
+    public int ProductPrice;
 }
