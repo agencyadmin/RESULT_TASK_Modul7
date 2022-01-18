@@ -2,17 +2,33 @@
 {
     public abstract class Delivery
     {
-        public int DeliveryId;
-        public DateTime DeliveryOpenDate;
-        public DateTime DeliveryDateTime;
-        public Client Client;
-        public string DeliveryAddress;
-        public int DeliveryAmount;
-        public string DeliverySummPaied;
-        public bool IsDelFullyPaied;
-        public Currency OrderCurrency;
-        public string DeliveryDescription;
-        public DateTime DeliveryCloseDate;
+        public int DeliveryId { get; set; }
+        public DateTime DeliveryOpenDate { get; set; }
+        public DateTime DeliveryDateTime { get; set; }
+        private Client Client { get; set; }
+        protected string DeliveryAddress { get; set; }
+        private int DeliveryAmount { get; set; }
+        protected int DeliverySummPaied { get; set; }
+        public bool IsDelFullyPaied { get; set; }
+        public Currency OrderCurrency { get; set; }
+        public string DeliveryDescription { get; set; }
+        public DateTime DeliveryCloseDate { get; set; }
+
+        public Delivery (int DeliveryID, DateTime DeliveryOpenDate, DateTime DeliveryDateTime, Client Client, string DeliveryAddress, 
+                        int DeliveryAmount, int DeliverySummPaied, Currency OrderCurrency, string DeliveryDescription) 
+        { 
+        this.DeliveryId = DeliveryID;
+            this.DeliveryOpenDate = DeliveryOpenDate;
+            this.DeliveryDateTime = DeliveryDateTime;   
+            this.Client = Client;
+            this.DeliveryAddress = DeliveryAddress;
+            this.DeliveryAmount = DeliveryAmount;
+            this.DeliverySummPaied = DeliverySummPaied;
+            this.OrderCurrency = OrderCurrency;
+            this.DeliveryDescription = DeliveryDescription; 
+            IsDelFullyPaied =  DeliverySummPaied >= DeliveryAmount ? true : false;
+            ;
+        }
 
 
     }
@@ -218,7 +234,7 @@
 
 
     }
-    // расписать ниже как в book индексаторе, а так же можно добавить классы для адреса и мобильного телефона, дописать переопределение виртуальных методов,
+    // добавить классы для адреса и мобильного телефона, дописать переопределение виртуальных методов для аккаунта абстрактного,
     // добавить свойства и конструкторы классов с параметрами, статических классов или элементов, сделать мод доступа прайвит для данных класса важных
     public class Product
     {
