@@ -38,11 +38,16 @@
         public Currency PaymentCurrency;
         public int PaiedSummOfOrder;
         public int OrderSumm;
-        public PaymentMethod PaymentMethod;
         public DateTime PaymentDateTime;
         public int PaymentAmount;
         public int PaymentDocNumber;
         public int OrderPaymentBalance;
+        public enum PaymentMethod
+    {
+        cash,
+        card,
+        wire
+    }
     }
 
     abstract public class Person
@@ -55,6 +60,16 @@
         public DateOnly DocIssueDate;
         public string WhoIssueDoc;
 
+        public Person(string name)
+        {
+            Name = name;
+        }
+
+        public void DisplayName()
+        {
+            Console.WriteLine(Name);
+        }
+
     }
 
     public class Human : Person
@@ -64,7 +79,15 @@
         public DateOnly Birthday;
         public bool IsMarried;
         public byte ChildrenQuantity;
-    }
+
+        public Human(string name, string SurName, string FatherName, DateOnly Birthday, bool IsMarried, byte ChildrenQuantity) : base(name)
+        {
+            this.IsMarried  = IsMarried;
+            this.SurName = SurName; 
+            this.FatherName = FatherName;
+            this.Birthday = Birthday;
+            this.ChildrenQuantity = ChildrenQuantity;
+        }
 
     public class Company : Person
     {
@@ -130,16 +153,13 @@
         public DateTime AccountCloseDate;
     }
 
-    public enum PaymentMethod
-    {
-        cash,
-        card,
-        wire
-    }
+   
 
     public abstract class Currency
     { //что то тут дописать что бы карренси агрегировал фиатные карренси , крипто карренси, электронные деньги.
-
+        public string CurrencyID;
+        public string CurrencyFullName;
+        public string CountryOfCurrency;
 
     }
 
