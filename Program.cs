@@ -27,7 +27,7 @@
             this.OrderCurrency = OrderCurrency;
             this.DeliveryDescription = DeliveryDescription; 
             IsDelFullyPaied =  DeliverySummPaied >= DeliveryAmount ? true : false;
-            ;
+            
         }
 
 
