@@ -227,8 +227,8 @@
         public string ProductDescription;
         public string ProductCategory;
         public int ProductCategoryID;
-        public int ProductCategoryName;
-        public int ProductCategoryDescription;
+        public string ProductCategoryName;
+        public string ProductCategoryDescription;
         public int ProductPrice;
     }
 
@@ -266,4 +266,41 @@
             }
         }
     }
+
+    class Programm
+    {
+        static void Main(string[] args)
+        {
+            var array = new Product[]
+            {
+    new Product
+    {
+        ProductID = 1,
+        ProductName = "Computer",
+        ProductDescription = "Computer for gamers",
+        ProductCategory = "Home technic",
+        ProductCategoryID = 23,
+        ProductCategoryName = "Peaple hometechnik for person",
+        ProductCategoryDescription = "Home technic applayencies",
+        ProductPrice = 1000,
+
+    },
+    new Product
+    {
+            ProductID = 2,
+            ProductName = "Monitor",
+            ProductDescription = "Monitor for gamers",
+            ProductCategory = "Home Electronic",
+            ProductCategoryID = 30,
+            ProductCategoryName = "Peaple homeelectronic for person",
+            ProductCategoryDescription = "Home electronic applayencies",
+            ProductPrice = 500,
+    },
+            };
+            ShoppingCart cart = new ShoppingCart(array);
+
+            Product Product = cart[1];
+        }
+    }
 }
+
