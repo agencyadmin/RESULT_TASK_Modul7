@@ -14,20 +14,20 @@
         public string DeliveryDescription { get; set; }
         public DateTime DeliveryCloseDate { get; set; }
 
-        public Delivery (int DeliveryID, DateTime DeliveryOpenDate, DateTime DeliveryDateTime, Client Client, string DeliveryAddress, 
-                        int DeliveryAmount, int DeliverySummPaied, Currency OrderCurrency, string DeliveryDescription) 
-        { 
-        this.DeliveryId = DeliveryID;
+        public Delivery(int DeliveryID, DateTime DeliveryOpenDate, DateTime DeliveryDateTime, Client Client, string DeliveryAddress,
+                        int DeliveryAmount, int DeliverySummPaied, Currency OrderCurrency, string DeliveryDescription)
+        {
+            this.DeliveryId = DeliveryID;
             this.DeliveryOpenDate = DeliveryOpenDate;
-            this.DeliveryDateTime = DeliveryDateTime;   
+            this.DeliveryDateTime = DeliveryDateTime;
             this.Client = Client;
             this.DeliveryAddress = DeliveryAddress;
             this.DeliveryAmount = DeliveryAmount;
             this.DeliverySummPaied = DeliverySummPaied;
             this.OrderCurrency = OrderCurrency;
-            this.DeliveryDescription = DeliveryDescription; 
-            IsDelFullyPaied =  DeliverySummPaied >= DeliveryAmount ? true : false;
-            
+            this.DeliveryDescription = DeliveryDescription;
+            IsDelFullyPaied = DeliverySummPaied >= DeliveryAmount ? true : false;
+
         }
 
 
@@ -35,30 +35,30 @@
 
     public class Payment
     {
-        public Currency PaymentCurrency;
-        public int PaiedSummOfOrder;
-        public int OrderSumm;
-        public DateTime PaymentDateTime;
-        public int PaymentAmount;
-        public int PaymentDocNumber;
-        public int OrderPaymentBalance;
+        public Currency PaymentCurrency { get; set; }
+        public int PaiedSummOfOrder { get; set; }
+        public int OrderSumm { get; set; }
+        public DateTime PaymentDateTime { get; set; }
+        public int PaymentAmount { get; set; }
+        public int PaymentDocNumber { get; set; }
+        public int OrderPaymentBalance { get; set; }
         public enum PaymentMethod
-    {
-        cash,
-        card,
-        wire
-    }
+        {
+            cash,
+            card,
+            wire
+        }
     }
 
-    abstract public class Person
+    public abstract class Person
     {
-        public string Name;
-        public string ResidenceAdress;
-        public byte PhoneNumber;
-        public string DocName;
-        public string DocNumber;
-        public DateOnly DocIssueDate;
-        public string WhoIssueDoc;
+        public string Name { get; set; }
+        public string ResidenceAdress { get; set; }
+        public byte PhoneNumber { get; set; }
+        public string DocName { get; set; }
+        public string DocNumber { get; set; }
+        public DateOnly DocIssueDate { get; set; }
+        public string WhoIssueDoc { get; set; }
 
         public Person(string name)
         {
@@ -74,11 +74,11 @@
 
     public class Human : Person
     {
-        public string SurName;
-        public string FatherName;
-        public DateOnly Birthday;
-        public bool IsMarried;
-        public byte ChildrenQuantity;
+        public string SurName { get; set; }
+        public string FatherName { get; set; }
+        public DateOnly Birthday { get; set; }
+        public bool IsMarried { get; set; }
+        public byte ChildrenQuantity { get; set; }
 
         public Human(string name, string SurName, string FatherName, DateOnly Birthday, bool IsMarried, byte ChildrenQuantity) : base(name)
         {
@@ -91,15 +91,28 @@
     }
     public class Company : Person
     {
-        public Human Director;
-        public Human Accounter;
-        public string BranchAdress;
-        public string Accoutnumber;
-        public string AccountBank;
-        public string BankCorrespondent;
-        public string BankAdress;
-        public int VATNumber;
-        public string RegistrationNumber;
+        public Human Director { get; set; }
+        public Human Accounter { get; set; }
+        public string BranchAdress { get; set; }
+        public string Accoutnumber { get; set; }
+        public string AccountBank { get; set; }
+        public string BankCorrespondent { get; set; }
+        public string BankAdress { get; set; }
+        public int VATNumber { get; set; }
+        public string RegistrationNumber { get; set; }
+        public Company(string name, Human Director, Human Accounter, string BranchAdress, string Accoutnumber, string AccountBank, string BankCorrespondent,
+           string BankAdress, int VATNumber, string RegistrationNumber) : base(name)
+        {
+            this.Director = Director;   
+            this.Accounter = Accounter; 
+            this.BranchAdress = BranchAdress;
+            this.Accoutnumber = Accoutnumber;   
+            this.AccountBank = AccountBank;
+            this.BankCorrespondent = BankCorrespondent;
+            this.BankAdress = BankAdress;
+            this.VATNumber = VATNumber;
+            this.RegistrationNumber = RegistrationNumber;
+        }
     }
 
     public class Staff : Human
@@ -110,7 +123,7 @@
         public byte Salary;
     }
 
-    public class Client : Person
+    public class Client : Human
     {
         public string ClientID;
         private int CompanyClientAccountNumber;
@@ -153,7 +166,7 @@
         public DateTime AccountCloseDate;
     }
 
-   
+
 
     public abstract class Currency
     { //что то тут дописать что бы карренси агрегировал фиатные карренси , крипто карренси, электронные деньги.
