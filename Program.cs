@@ -82,13 +82,13 @@
 
         public Human(string name, string SurName, string FatherName, DateOnly Birthday, bool IsMarried, byte ChildrenQuantity) : base(name)
         {
-            this.IsMarried  = IsMarried;
-            this.SurName = SurName; 
+            this.IsMarried = IsMarried;
+            this.SurName = SurName;
             this.FatherName = FatherName;
             this.Birthday = Birthday;
             this.ChildrenQuantity = ChildrenQuantity;
         }
-
+    }
     public class Company : Person
     {
         public Human Director;
