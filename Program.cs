@@ -91,15 +91,36 @@
     }
     public class Company : Person
     {
-        public Human Director { get; set; }
+        public Human Director { get; set; } //Ассоциация в форме композиции
         public Human Accounter { get; set; }
         public string BranchAdress { get; set; }
-        public string Accoutnumber { get; set; }
+        public string Accountnumber { get; set; }
         public string AccountBank { get; set; }
         public string BankCorrespondent { get; set; }
         public string BankAdress { get; set; }
         public int VATNumber { get; set; }
         public string RegistrationNumber { get; set; }
+
+        public Company(string name, Human Director, Human Accounter, string BranchAdress, string Accountnumber, string AccountBank, string BankCorrespondent, 
+            string BankAdress, int VATNumber, string RegistrationNumber) : base(name)
+        {
+            this.Director = Director;
+            this.Accounter = Accounter;
+            this.BranchAdress = BranchAdress;
+            this.Accountnumber = Accountnumber;
+            this.AccountBank = AccountBank;
+            this.BankCorrespondent = BankCorrespondent; 
+            this.BankAdress = BankAdress;
+            this.VATNumber = VATNumber;
+            this.RegistrationNumber = RegistrationNumber;
+
+        }
+        public Company()
+        {
+            Director = new Human(); // Композиция
+            Accounter = new Human();// Композиция
+        }
+
         public Company(string name, Human Director, Human Accounter, string BranchAdress, string Accoutnumber, string AccountBank, string BankCorrespondent,
            string BankAdress, int VATNumber, string RegistrationNumber) : base(name)
         {
@@ -121,6 +142,15 @@
         public DateOnly RetaingDate;
         public int StaffIDNumber;
         public byte Salary;
+
+        public Staff(string name, DateOnly HareDate, DateOnly RatingDate, int StaffIDNumber, byte Salary, string SurName, string FatherName,
+            DateOnly Birthday, bool IsMarried, byte ChildrenQuantity) : base(name, SurName,  FatherName,  Birthday, IsMarried, ChildrenQuantity)
+        {
+            this.HareDate = HareDate;
+            this.RetaingDate = RatingDate;  
+            this.Salary = Salary;
+            this.StaffIDNumber= StaffIDNumber;  
+        }
     }
 
     public class Client : Human
@@ -133,16 +163,22 @@
         public DateTime CompanyClientAccOpenDate;
     }
 
-    public class Partners : Company
+    public class Partners<TClientType> where TClientType : Company //но партнером по идее может быть и человек....
     {
+        TClientType Partner;
         public int PartnerIDNumber;
         public int ContractIDNumber;
         public DateOnly ContractDate;
         public DateOnly ContractCloseDate;
         public int PartnerFee;
+        public void Partners()
+        {
+
+            Partner = new TClientType();
+        }
     }
 
-    public class Curiers : Partners
+    public class Curiers<TCuriesIsEmployes> where TCuriesIsEmployes : Partners
     {
         public int CuriersIDNumber;
         public DateTime CuriersDateContract;
@@ -160,10 +196,20 @@
         public string AccountName;
         public string AccountDescription;
         public string AccountType;
-        public int AccountCurrency;
+        public Currency AccountCurrency;
         public int AccountBalance;
         public DateTime AccountOpenDate;
         public DateTime AccountCloseDate;
+    }// реализовать этот класс счета для счетов клиентов, счетов сотрудников, счетов партнеров.
+
+    public abstract class Transaction
+    {
+        public string TransactionID;
+        public string TransactionType;
+        public string TransactionAmount;
+        public Currency TransactionCurrency;
+        public Account TransactionSenderAccount;
+        public string TransactionRecieverAccount;
     }
 
 
@@ -255,7 +301,7 @@
 
         public void DisplayAddress()
         {
-            Console.WriteLine(Delivery.DeliveryAddress);
+            Console.WriteLine(Order.DeliveryAddress);
         }
 
         // ... Другие поля
