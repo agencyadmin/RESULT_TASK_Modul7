@@ -101,7 +101,7 @@
         public int VATNumber { get; set; }
         public string RegistrationNumber { get; set; }
 
-        public Company(string name, Human Director, Human Accounter, string BranchAdress, string Accountnumber, string AccountBank, string BankCorrespondent, 
+        public Company(string name, Human Director, Human Accounter, string BranchAdress, string Accountnumber, string AccountBank, string BankCorrespondent,
             string BankAdress, int VATNumber, string RegistrationNumber) : base(name)
         {
             this.Director = Director;
@@ -109,25 +109,25 @@
             this.BranchAdress = BranchAdress;
             this.Accountnumber = Accountnumber;
             this.AccountBank = AccountBank;
-            this.BankCorrespondent = BankCorrespondent; 
+            this.BankCorrespondent = BankCorrespondent;
             this.BankAdress = BankAdress;
             this.VATNumber = VATNumber;
             this.RegistrationNumber = RegistrationNumber;
 
         }
-        public Company()
+        public Company(string name) : base(name)
         {
-            Director = new Human(); // Композиция
-            Accounter = new Human();// Композиция
+            Director = new Human("Ivanov", "Ivan", "Ivanovich", 01 - Jan - 01, true, 3); // Композиция
+            Accounter = new Human("Jakovleva", "Svetlana", "Petrovna", 1976 - 03 - 19, true, 3);// Композиция
         }
 
         public Company(string name, Human Director, Human Accounter, string BranchAdress, string Accoutnumber, string AccountBank, string BankCorrespondent,
            string BankAdress, int VATNumber, string RegistrationNumber) : base(name)
         {
-            this.Director = Director;   
-            this.Accounter = Accounter; 
+            this.Director = Director;
+            this.Accounter = Accounter;
             this.BranchAdress = BranchAdress;
-            this.Accoutnumber = Accoutnumber;   
+            this.Accoutnumber = Accoutnumber;
             this.AccountBank = AccountBank;
             this.BankCorrespondent = BankCorrespondent;
             this.BankAdress = BankAdress;
@@ -144,26 +144,47 @@
         public byte Salary;
 
         public Staff(string name, DateOnly HareDate, DateOnly RatingDate, int StaffIDNumber, byte Salary, string SurName, string FatherName,
-            DateOnly Birthday, bool IsMarried, byte ChildrenQuantity) : base(name, SurName,  FatherName,  Birthday, IsMarried, ChildrenQuantity)
+            DateOnly Birthday, bool IsMarried, byte ChildrenQuantity) : base(name, SurName, FatherName, Birthday, IsMarried, ChildrenQuantity)
         {
             this.HareDate = HareDate;
-            this.RetaingDate = RatingDate;  
+            this.RetaingDate = RatingDate;
             this.Salary = Salary;
-            this.StaffIDNumber= StaffIDNumber;  
+            this.StaffIDNumber = StaffIDNumber;
         }
     }
 
     public class Client : Human
     {
-        public string ClientID;
-        private int CompanyClientAccountNumber;
-        private int CompanyClientAccountBalance;
-        public string CompanyClientAccountCurrency;
-        public string CompanyClientAccountName;
-        public DateTime CompanyClientAccOpenDate;
+        public string ClientID { get; set; } // дописать логику что бы номер клиента шел по порядку и не повторялся с предыдущим клиентом
+        private int CompanyClientAccountNumber
+        {
+            get
+            {
+                return CompanyClientAccountNumber;
+            }
+            set
+            {
+                if (CompanyClientAccountAmount <= value) { CompanyClientAccountNumber += CompanyClientAccountAmount; }
+
+            }
+        }
+        private int CompanyClientAccountBalance { get; set; }
+        public string CompanyClientAccountCurrency { get; set; }
+        public string CompanyClientAccountName { get; set; }
+        public DateTime CompanyClientAccOpenDate { get; set; }
+        protected internal int CompanyClientAccountAmount { get; set; }
+
+        public Client()
+        {
+            this.ClientID = 0;
+            this.CompanyClientAccountAmount = 0;
+            this.CompanyClientAccountBalance = 0;
+        }
     }
 
-    public class Partners<TClientType> where TClientType : Company //но партнером по идее может быть и человек....
+    public class Partners<TClientType> where TClientType : Company //но партнером по идее может быть и человек, так что ограничение по типу универсальной
+                                                                   //можно и убрать в зависимости от бизнеслогики компании работает ли она со своими работниками как
+                                                                   // с курьерами сторонними организациями или физическими лицами
     {
         TClientType Partner;
         public int PartnerIDNumber;
@@ -271,6 +292,19 @@
         public bool IsLift;
         public byte AmountOfDeliveryTry;
 
+        public HomeDelivery(Curiers Curier, TimeOnly ClientWishTimeFrom, TimeOnly ClientWishTimeTo, bool IsPOSNeeded, int EnterenceCode, byte Floor,
+            bool IsLift, byte AmountOfDeliveryTry)
+        {
+            this.Curier = Curier;
+            this.ClientWishTimeFrom = ClientWishTimeFrom;
+            this.ClientWishTimeTo = ClientWishTimeTo;
+            this.IsPOSNeeded = IsPOSNeeded;
+            this.EnterenceCode = EnterenceCode;
+            this.Floor = Floor;
+            this.IsLift = IsLift;
+            this.AmountOfDeliveryTry = AmountOfDeliveryTry;
+        }
+
 
     }
 
@@ -286,11 +320,21 @@
         public DateTime DeliveredToPickPoint;
         public DateTime TakeParcelDeadLine;
         public DateTime ReturnFromPickPoint;
+
+        public PickPointDelivery()
+        {
+
+        }
     }
 
     class ShopDelivery : Delivery
     {
         /* ... */
+
+        public ShopDelivery()
+        {
+
+        }
     }
 
     public class Order<TDelivery, TStruct> where TDelivery : Delivery
@@ -298,6 +342,8 @@
         public TDelivery Delivery;
 
         public int OrderNumber;
+
+        public Order<TDelivery, TStruct>(int OrderNumber, )
 
         public void DisplayAddress()
         {
