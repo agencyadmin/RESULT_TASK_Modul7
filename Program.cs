@@ -54,12 +54,22 @@
     {
         public string Name { get; set; }
         public string ResidenceAdress { get; set; }
-        public byte PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
         public string DocName { get; set; }
         public string DocNumber { get; set; }
         public DateOnly DocIssueDate { get; set; }
         public string WhoIssueDoc { get; set; }
 
+        public Person()
+        {
+            Name = "unknown Name";
+            ResidenceAdress = "unknown Adress";
+            PhoneNumber = "unknown PhoneNumber";
+            DocName = "unknown DocName";
+            DocNumber = "unknown DocNumber";
+            DocIssueDate = new DateOnly();
+            WhoIssueDoc = "unknown WhoIssueDoc";
+        }
         public Person(string name)
         {
             Name = name;
@@ -80,6 +90,15 @@
         public bool IsMarried { get; set; }
         public byte ChildrenQuantity { get; set; }
 
+        public Human()
+        {
+
+            SurName = "unknown SurName";
+            FatherName = "unknown FatherName";
+            Birthday = new DateOnly();
+            IsMarried = false;
+            ChildrenQuantity = 0;
+        }
         public Human(string name, string SurName, string FatherName, DateOnly Birthday, bool IsMarried, byte ChildrenQuantity) : base(name)
         {
             this.IsMarried = IsMarried;
@@ -101,8 +120,7 @@
         public int VATNumber { get; set; }
         public string RegistrationNumber { get; set; }
 
-        public Company(string name, Human Director, Human Accounter, string BranchAdress, string Accountnumber, string AccountBank, string BankCorrespondent,
-            string BankAdress, int VATNumber, string RegistrationNumber) : base(name)
+        public Company() : base()
         {
             this.Director = Director;
             this.Accounter = Accounter;
@@ -121,13 +139,13 @@
             Accounter = new Human("Jakovleva", "Svetlana", "Petrovna", 1976 - 03 - 19, true, 3);// Композиция
         }
 
-        public Company(string name, Human Director, Human Accounter, string BranchAdress, string Accoutnumber, string AccountBank, string BankCorrespondent,
+        public Company(string name, Human Director, Human Accounter, string BranchAdress, string Accountnumber, string AccountBank, string BankCorrespondent,
            string BankAdress, int VATNumber, string RegistrationNumber) : base(name)
         {
             this.Director = Director;
             this.Accounter = Accounter;
             this.BranchAdress = BranchAdress;
-            this.Accoutnumber = Accoutnumber;
+            this.Accountnumber = Accountnumber;
             this.AccountBank = AccountBank;
             this.BankCorrespondent = BankCorrespondent;
             this.BankAdress = BankAdress;
@@ -140,9 +158,18 @@
     {
         public DateOnly HareDate;
         public DateOnly RetaingDate;
-        public int StaffIDNumber;
+        public int StaffIDNumber {get;set;}  
         public byte Salary;
 
+        public Staff()
+        {
+            
+            this.HareDate = new DateOnly(); 
+            this.RetaingDate = new DateOnly();
+            this.StaffIDNumber = 1;
+            this.Salary = 0;
+
+        }
         public Staff(string name, DateOnly HareDate, DateOnly RatingDate, int StaffIDNumber, byte Salary, string SurName, string FatherName,
             DateOnly Birthday, bool IsMarried, byte ChildrenQuantity) : base(name, SurName, FatherName, Birthday, IsMarried, ChildrenQuantity)
         {
@@ -155,8 +182,26 @@
 
     public class Client : Human
     {
-        public string ClientID { get; set; } // дописать логику что бы номер клиента шел по порядку и не повторялся с предыдущим клиентом
-        private int CompanyClientAccountNumber
+        public long ClientID
+        {
+            get
+            {
+                return ClientID;
+            }
+            set
+            {
+                if (CompanyClientAccountAmount <= value)
+                {
+                    ClientID = CompanyClientAccountAmount + 1000000000000;
+                    CompanyClientAccountAmount++;
+                }
+                else
+                {
+                    ClientID = CompanyClientAccountAmount + 1000000000000;
+                    ClientID = value + 1000000000000;
+                }
+            } // дописать логику что бы номер клиента шел по порядку и не повторялся с предыдущим клиентом
+        protected internal int CompanyClientAccountNumber
         {
             get
             {
@@ -164,27 +209,41 @@
             }
             set
             {
-                if (CompanyClientAccountAmount <= value) { CompanyClientAccountNumber += CompanyClientAccountAmount; }
-
+                if (CompanyClientAccountAmount <= value)
+                {
+                    CompanyClientAccountNumber += CompanyClientAccountAmount;
+                    CompanyClientAccountAmount++;
+                }
+                else
+                {
+                    CompanyClientAccountNumber = value;
+                    CompanyClientAccountAmount++;
+                }
             }
         }
         private int CompanyClientAccountBalance { get; set; }
-        public string CompanyClientAccountCurrency { get; set; }
+        public FiatCurrency CompanyClientAccountCurrency { get; set; }
         public string CompanyClientAccountName { get; set; }
         public DateTime CompanyClientAccOpenDate { get; set; }
-        protected internal int CompanyClientAccountAmount { get; set; }
+        public int CompanyClientAccountAmount { get; set; }
 
         public Client()
         {
-            this.ClientID = 0;
-            this.CompanyClientAccountAmount = 0;
-            this.CompanyClientAccountBalance = 0;
+            ClientID = 0;
+            CompanyClientAccountAmount = 0; // общее количество клиентов приращиваеться на единицу каждый раз после создания нового, при присвоении
+                                            // нового номера клиента в сетторе.
+            CompanyClientAccountBalance = 0;
+            CompanyClientAccountCurrency = new FiatCurrency();
+            CompanyClientAccountName = "super new client has came";
+            CompanyClientAccOpenDate = DateTime.Now;
+            CompanyClientAccountAmount = 0;
         }
     }
 
     public class Partners<TClientType> where TClientType : Company //но партнером по идее может быть и человек, так что ограничение по типу универсальной
-                                                                   //можно и убрать в зависимости от бизнеслогики компании работает ли она со своими работниками как
-                                                                   // с курьерами сторонними организациями или физическими лицами
+                                       //where TClientType : Human                           //можно и убрать в зависимости от бизнеслогики компании работает ли она со своими работниками как
+                                                                                              // с курьерами сторонними организациями или физическими лицами. Можно конечно было и не заводить 
+                                                                                              //переменную по учету общего количества клиентов но так удобнее и можно поле видимости шире сделать
     {
         TClientType Partner;
         public int PartnerIDNumber;
@@ -194,7 +253,6 @@
         public int PartnerFee;
         public void Partners()
         {
-
             Partner = new TClientType();
         }
     }
@@ -245,15 +303,20 @@
 
     public class FiatCurrency : Currency
     {
+        public int FiatCurrencyValue;
         public enum FiatCurrencyEnum
         {
-            usd,
-            byr,
-            ryb,
-            euro,
-            chif,
-            pound
+            usd = 840,
+            byr = 750,
+            ryb = 375,
+            euro = 220,
+            chif = 348,
+            pound = 465
 
+        }
+        public FiatCurrency()
+        {
+            FiatCurrencyValue = (int)FiatCurrencyEnum.byr;
         }
     }
 
