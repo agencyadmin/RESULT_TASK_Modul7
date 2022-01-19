@@ -1,8 +1,8 @@
 ﻿namespace InternetShop
 {
-    public class Delivery // abstruct is delited
+    public abstract class Delivery 
     {
-        public int DeliveryId { get; set; }
+        protected int DeliveryId { get; set; }
         public DateTime DeliveryOpenDate { get; set; }
         public DateTime DeliveryDateTime { get; set; }
         private Client ClientForDelivery { get; set; }
@@ -10,7 +10,7 @@
         private int DeliveryAmount { get; set; }
         protected int DeliverySummPaied { get; set; }
         public bool IsDelFullyPaied { get; set; }
-        public Currency DeliveryOrderCurrency { get; set; }
+        protected Currency DeliveryOrderCurrency { get; set; }
         public string DeliveryDescription { get; set; }
         public DateTime DeliveryCloseDate { get; set; }
         public Delivery()
@@ -43,7 +43,7 @@
 
         }
 
-        public void DisplayAddress()
+        public virtual void DisplayAddress()
         {
             Console.WriteLine(DeliveryAddress);
         }
@@ -53,12 +53,12 @@
     public class Payment
     {
         public Currency PaymentCurrency { get; set; }
-        public int PaiedSummOfOrder { get; set; }
-        public int OrderSumm { get; set; }
+        protected int PaiedSummOfOrder { get; set; }
+        protected int OrderSumm { get; set; }
         public DateTime PaymentDateTime { get; set; }
-        public int PaymentAmount { get; set; }
+        protected int PaymentAmount { get; set; }
         public int PaymentDocNumber { get; set; }
-        public int OrderPaymentBalance { get; set; }
+        protected int OrderPaymentBalance { get; set; }
         public enum PaymentMethod
         {
             cash,
@@ -70,11 +70,11 @@
     public abstract class Person
     {
         public string Name { get; set; }
-        public string ResidenceAdress { get; set; }
-        public string PhoneNumber { get; set; }
+        protected string ResidenceAdress { get; set; }
+        protected string PhoneNumber { get; set; }
         public string DocName { get; set; }
-        public string DocNumber { get; set; }
-        public DateOnly DocIssueDate { get; set; }
+        protected string DocNumber { get; set; }
+        protected DateOnly DocIssueDate { get; set; }
         public string WhoIssueDoc { get; set; }
 
         public Person()
@@ -101,11 +101,11 @@
 
     public class Human : Person
     {
-        public string SurName { get; set; }
-        public string FatherName { get; set; }
-        public DateOnly Birthday { get; set; }
-        public bool IsMarried { get; set; }
-        public byte ChildrenQuantity { get; set; }
+        protected string SurName { get; set; }
+        protected string FatherName { get; set; }
+        protected DateOnly Birthday { get; set; }
+        protected bool IsMarried { get; set; }
+        protected byte ChildrenQuantity { get; set; }
 
         public Human()
         {
@@ -173,10 +173,10 @@
 
     public class Staff : Human
     {
-        public DateOnly HareDate;
-        public DateOnly RetaingDate;
+        protected DateOnly HareDate;
+        protected DateOnly RetaingDate;
         public int StaffIDNumber { get; set; }
-        public byte Salary;
+        public int Salary;
 
         public Staff()
         {
@@ -195,7 +195,15 @@
             this.Salary = Salary;
             this.StaffIDNumber = StaffIDNumber;
         }
-    }
+
+        public static Staff operator +(Staff a, Staff b)
+        {
+            return new Staff
+            {
+                StaffIDNumber = a.StaffIDNumber + b.StaffIDNumber,
+                Salary = a.Salary + b.Salary
+            };
+        }
 
     public class Client : Human
     {
@@ -418,6 +426,11 @@
             this.AmountOfDeliveryTry = AmountOfDeliveryTry;
         }
 
+        public override void DisplayAddress()
+        {
+            Console.WriteLine(DeliveryAddress, Floor, IsLift);
+        }
+
 
     }
 
@@ -438,6 +451,11 @@
         {
 
         }
+
+        public override void DisplayAddress()
+        {
+            Console.WriteLine(PickPointName, PickPointAdress, PickPointDescription);
+        }
     }
 
     class ShopDelivery : Delivery
@@ -456,10 +474,15 @@
         {
 
         }
+
+        public override void DisplayAddress()
+        {
+            Console.WriteLine(ShopName, ShopAdress, ShopDescription);
+        }
     }
 
-    public class Order<TDelivery, TShoppingCart> where TShoppingCart : ShoppingCart
-        // where TDelivery : HomeDelivery 
+    public class Order<TDelivery, TShoppingCart> where TDelivery : Delivery where TShoppingCart : ShoppingCart
+        
     {
         public int OrderNumber;
         TDelivery DeliveryOrder;
