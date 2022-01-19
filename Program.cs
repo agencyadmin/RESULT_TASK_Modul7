@@ -5,22 +5,35 @@
         public int DeliveryId { get; set; }
         public DateTime DeliveryOpenDate { get; set; }
         public DateTime DeliveryDateTime { get; set; }
-        private Client Client { get; set; }
+        private Client ClientForDelivery { get; set; }
         protected string DeliveryAddress { get; set; }
         private int DeliveryAmount { get; set; }
         protected int DeliverySummPaied { get; set; }
         public bool IsDelFullyPaied { get; set; }
-        public Currency OrderCurrency { get; set; }
+        public Currency DeliveryOrderCurrency { get; set; }
         public string DeliveryDescription { get; set; }
         public DateTime DeliveryCloseDate { get; set; }
+        public Delivery()
+        {
+            DeliveryId = 333000;
+            DeliveryOpenDate = new DateTime();
+            DeliveryDateTime = new DateTime();
+            ClientForDelivery = new Client();
+            DeliveryAddress = "Delivery Address is unknown";
+            DeliveryAmount = 0;
+            DeliverySummPaied = 0;
+            DeliveryOrderCurrency = new Currency();
+            DeliveryDescription = DeliveryDescription;
+            IsDelFullyPaied = DeliverySummPaied >= DeliveryAmount ? true : false;
+        }
 
-        public Delivery(int DeliveryID, DateTime DeliveryOpenDate, DateTime DeliveryDateTime, Client Client, string DeliveryAddress,
-                        int DeliveryAmount, int DeliverySummPaied, Currency OrderCurrency, string DeliveryDescription)
+        public Delivery(int DeliveryID, DateTime DeliveryOpenDate, DateTime DeliveryDateTime, Client ClientForDelivery, string DeliveryAddress,
+                    int DeliveryAmount, int DeliverySummPaied, Currency OrderCurrency, string DeliveryDescription)
         {
             this.DeliveryId = DeliveryID;
             this.DeliveryOpenDate = DeliveryOpenDate;
             this.DeliveryDateTime = DeliveryDateTime;
-            this.Client = Client;
+            this.ClientForDelivery = ClientForDelivery;
             this.DeliveryAddress = DeliveryAddress;
             this.DeliveryAmount = DeliveryAmount;
             this.DeliverySummPaied = DeliverySummPaied;
@@ -30,6 +43,10 @@
 
         }
 
+        public void DisplayAddress()
+        {
+            Console.WriteLine(Delivery.DeliveryAddress);
+        }
 
     }
 
@@ -158,13 +175,13 @@
     {
         public DateOnly HareDate;
         public DateOnly RetaingDate;
-        public int StaffIDNumber {get;set;}  
+        public int StaffIDNumber { get; set; }
         public byte Salary;
 
         public Staff()
         {
-            
-            this.HareDate = new DateOnly(); 
+
+            this.HareDate = new DateOnly();
             this.RetaingDate = new DateOnly();
             this.StaffIDNumber = 1;
             this.Salary = 0;
@@ -241,19 +258,28 @@
     }
 
     public class Partners<TClientType> where TClientType : Company //но партнером по идее может быть и человек, так что ограничение по типу универсальной
-                                       //where TClientType : Human                           //можно и убрать в зависимости от бизнеслогики компании работает ли она со своими работниками как
-                                                                                              // с курьерами сторонними организациями или физическими лицами. Можно конечно было и не заводить 
-                                                                                              //переменную по учету общего количества клиентов но так удобнее и можно поле видимости шире сделать
+                                                                   //where TClientType : Human                           
+                                                                   //можно и убрать в зависимости от бизнеслогики компании работает ли она со своими работниками как
+                                                                   // с курьерами сторонними организациями или физическими лицами. Можно конечно было и не заводить 
+                                                                   //переменную по учету общего количества клиентов но так удобнее и можно поле видимости шире сделать
+                                                                   // но можно и не ограничивать тогда класс партнеры будут работать и с компаниями и с гражданами 
+
     {
-        TClientType Partner;
+        TClientType Partner = default(TClientType);
         public int PartnerIDNumber;
         public int ContractIDNumber;
         public DateOnly ContractDate;
         public DateOnly ContractCloseDate;
         public int PartnerFee;
-        public void Partners()
+        public Partners()
         {
-            Partner = new TClientType();
+            Partners<TClientType> Partner = new Partners<TClientType>();
+            PartnerIDNumber = 2000;
+            ContractIDNumber = 0;
+            DateOnly ContractDate = new DateOnly();
+            DateOnly ContractCloseDate = new DateOnly();
+            PartnerFee = 2;
+
         }
     }
 
@@ -295,6 +321,7 @@
 
     public abstract class Currency
     { //что то тут дописать что бы карренси агрегировал фиатные карренси , крипто карренси, электронные деньги.
+      // либо где надо использовать универсальный пораметр типа <TCurrency> где надо и вызывать конструктор уже конкретного класса по нужному типу
         public string CurrencyID;
         public string CurrencyFullName;
         public string CountryOfCurrency;
@@ -322,25 +349,36 @@
 
     public class CryptoCurrency : Currency
     {
+
+        public int CryptoCurrencyValue = 100;
         public enum CryptoCurrencyEnum
         {
-            bitcoin,
-            manero,
-            bnb,
-            Etherium
+            Bitcoin = 100,
+            Manero = 100,
+            Bnb = 200,
+            Etherium = 500
 
+        }
+        public CryptoCurrency()
+        {
+            CryptoCurrencyValue = (int)CryptoCurrencyEnum.Etherium;
         }
     }
 
     public class ElectronicCurrency : Currency
     {
+        public int ElectronicCurrencyValue = 700;
         public enum ElectronicCurrencyEnum
         {
-            webmoney,
-            yandexmoney,
-            manymailru,
-            qiwi
+            Webmoney = 700,
+            Yandexmoney = 800,
+           Moneymailru = 665,
+           Qiwi = 116
 
+        }
+        public ElectronicCurrency()
+        {
+            ElectronicCurrencyValue = (int)ElectronicCurrencyEnum.Webmoney;
         }
     }
     class HomeDelivery : Delivery
