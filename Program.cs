@@ -1,12 +1,12 @@
 ﻿namespace InternetShop
 {
-    public abstract class Delivery
+    public class Delivery // abstruct is delited
     {
         public int DeliveryId { get; set; }
         public DateTime DeliveryOpenDate { get; set; }
         public DateTime DeliveryDateTime { get; set; }
         private Client ClientForDelivery { get; set; }
-        protected string DeliveryAddress { get; set; }
+        public string DeliveryAddress { get; set; }
         private int DeliveryAmount { get; set; }
         protected int DeliverySummPaied { get; set; }
         public bool IsDelFullyPaied { get; set; }
@@ -257,12 +257,12 @@
         }
     }
 
-    public class Partners<TClientType> where TClientType : Company //но партнером по идее может быть и человек, так что ограничение по типу универсальной
-                                                                   //where TClientType : Human                           
-                                                                   //можно и убрать в зависимости от бизнеслогики компании работает ли она со своими работниками как
-                                                                   // с курьерами сторонними организациями или физическими лицами. Можно конечно было и не заводить 
-                                                                   //переменную по учету общего количества клиентов но так удобнее и можно поле видимости шире сделать
-                                                                   // но можно и не ограничивать тогда класс партнеры будут работать и с компаниями и с гражданами 
+    public class Partners<TClientType> //where TClientType : Company //но партнером по идее может быть и человек, так что ограничение по типу универсальной
+                                       //where TClientType : Human                           
+                                       //можно и убрать в зависимости от бизнеслогики компании работает ли она со своими работниками как
+                                       // с курьерами сторонними организациями или физическими лицами. Можно конечно было и не заводить 
+                                       //переменную по учету общего количества клиентов но так удобнее и можно поле видимости шире сделать
+                                       // но можно и не ограничивать тогда класс партнеры будут работать и с компаниями и с гражданами 
 
     {
         TClientType Partner = default(TClientType);
@@ -282,8 +282,8 @@
 
         }
     }
-
-    public class Curiers<TClientType>:Partners<TClientType>
+    
+    public class Curiers<TClientType> : Partners<TClientType>
     {
         public TClientType Curier = default(TClientType);
         public int CuriersIDNumber;
@@ -294,6 +294,12 @@
         public int CuriersOrdersQountity;
         public byte CurierRating;
         public string CurierDescription;
+
+        public Curiers()
+        {
+           Curiers<TClientType> Curier = new Curiers<TClientType>();
+           
+        }
     }
 
     public abstract class Account
@@ -385,7 +391,7 @@
     class HomeDelivery : Delivery
     {
         /* ... */
-        public Curiers Curier;
+        public Curiers<TClientType> HomeCurier = default(TClientType);
         public TimeOnly ClientWishTimeFrom;
         public TimeOnly ClientWishTimeTo;
         public bool IsPOSNeeded;
@@ -396,13 +402,13 @@
 
         public HomeDelivery()
         {
-
+            Curiers<TClientType> HomeCurier = new Curiers<TClientType>();
         }
 
-        public HomeDelivery(Curiers Curier, TimeOnly ClientWishTimeFrom, TimeOnly ClientWishTimeTo, bool IsPOSNeeded, int EnterenceCode, byte Floor,
+        public HomeDelivery(Curiers<TClientType> Curier, TimeOnly ClientWishTimeFrom, TimeOnly ClientWishTimeTo, bool IsPOSNeeded, int EnterenceCode, byte Floor,
             bool IsLift, byte AmountOfDeliveryTry)
         {
-            this.Curier = Curier;
+            this.HomeCurier = Curier;
             this.ClientWishTimeFrom = ClientWishTimeFrom;
             this.ClientWishTimeTo = ClientWishTimeTo;
             this.IsPOSNeeded = IsPOSNeeded;
@@ -438,31 +444,45 @@
     {
         /* ... */
         Partners<Company> ShopPartner = new Partners<Company>();
-        public string PickPointName;
-        public string PickPointDescription;
-        public string PickPointAdress;
-        public TimeOnly PickPointOpenDate;
-        public TimeOnly PickPointCloseDate;
-        public DateTime DeliveredToPickPoint;
-        public DateTime TakeParcelDeadLine;
-        public DateTime ReturnFromPickPoint;
+        public string ShopName;
+        public string ShopDescription;
+        public string ShopAdress;
+        public TimeOnly ShopOpenTime;
+        public TimeOnly ShopCloseTime;
+        public DateTime DeliveredToShop;
+        public DateTime SellingPeriodFrom;
+        public DateTime ReturnFromShop;
         public ShopDelivery()
         {
 
         }
     }
 
-    public class Order<TDelivery, TStruct> where TDelivery : Delivery
+    public class Order<TDelivery, TShoppingCart> where TShoppingCart : ShoppingCart
+                                                   // where TDelivery : HomeDelivery 
     {
-        public TDelivery Delivery;
-
         public int OrderNumber;
+        TDelivery Delivery;
+        TDelivery NewOrder;
+        TShoppingCart NewOrderCart;
+        public Order()
+        {
+            this.OrderNumber = 1;
+            TDelivery Delivery = new TDelivery();
+            Delivery<TDelivery> NewOrder = new Delivery<TDelivery>();
+            
 
-        public Order<TDelivery, TStruct>(int OrderNumber, )
+
+    }
+        public Order(int OrderNumber)
+            {
+            this.OrderNumber = OrderNumber;
+             Delivery<TDelivery> Delivery = new Delivery<TDelivery>();
+            }
 
         public void DisplayAddress()
         {
-            Console.WriteLine(Order.DeliveryAddress);
+            Console.WriteLine(NewOrder.DeliveryAddress);
         }
 
         // ... Другие поля
