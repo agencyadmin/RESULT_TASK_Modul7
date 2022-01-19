@@ -22,13 +22,13 @@
             DeliveryAddress = "Delivery Address is unknown";
             DeliveryAmount = 0;
             DeliverySummPaied = 0;
-            DeliveryOrderCurrency = new Currency();
+            DeliveryOrderCurrency = new FiatCurrency();
             DeliveryDescription = DeliveryDescription;
             IsDelFullyPaied = DeliverySummPaied >= DeliveryAmount ? true : false;
         }
 
         public Delivery(int DeliveryID, DateTime DeliveryOpenDate, DateTime DeliveryDateTime, Client ClientForDelivery, string DeliveryAddress,
-                    int DeliveryAmount, int DeliverySummPaied, Currency OrderCurrency, string DeliveryDescription)
+                    int DeliveryAmount, int DeliverySummPaied, Currency DeliveryOrderCurrency, string DeliveryDescription)
         {
             this.DeliveryId = DeliveryID;
             this.DeliveryOpenDate = DeliveryOpenDate;
@@ -37,7 +37,7 @@
             this.DeliveryAddress = DeliveryAddress;
             this.DeliveryAmount = DeliveryAmount;
             this.DeliverySummPaied = DeliverySummPaied;
-            this.OrderCurrency = OrderCurrency;
+            this.DeliveryOrderCurrency = DeliveryOrderCurrency;
             this.DeliveryDescription = DeliveryDescription;
             IsDelFullyPaied = DeliverySummPaied >= DeliveryAmount ? true : false;
 
@@ -45,7 +45,7 @@
 
         public void DisplayAddress()
         {
-            Console.WriteLine(Delivery.DeliveryAddress);
+            Console.WriteLine(DeliveryAddress);
         }
 
     }
@@ -152,8 +152,8 @@
         }
         public Company(string name) : base(name)
         {
-            Director = new Human("Ivanov", "Ivan", "Ivanovich", 01 - Jan - 01, true, 3); // Композиция
-            Accounter = new Human("Jakovleva", "Svetlana", "Petrovna", 1976 - 03 - 19, true, 3);// Композиция
+            Director = new Human("Ivanov", "Ivan", "Ivanovich", new DateOnly(1997,10,19), true, 3); // Композиция
+            Accounter = new Human("Jakovleva", "Svetlana", "Petrovna", new DateOnly(2000, 3, 19), true, 3);// Композиция
         }
 
         public Company(string name, Human Director, Human Accounter, string BranchAdress, string Accountnumber, string AccountBank, string BankCorrespondent,
@@ -283,8 +283,9 @@
         }
     }
 
-    public class Curiers<TCuriesIsEmployes> where TCuriesIsEmployes : Partners
+    public class Curiers<TClientType>:Partners<TClientType>
     {
+        public TClientType Curier = default(TClientType);
         public int CuriersIDNumber;
         public DateTime CuriersDateContract;
         public DateTime CuriersCloseDateContract;
@@ -372,8 +373,8 @@
         {
             Webmoney = 700,
             Yandexmoney = 800,
-           Moneymailru = 665,
-           Qiwi = 116
+            Moneymailru = 665,
+            Qiwi = 116
 
         }
         public ElectronicCurrency()
@@ -392,6 +393,11 @@
         public byte Floor;
         public bool IsLift;
         public byte AmountOfDeliveryTry;
+
+        public HomeDelivery()
+        {
+
+        }
 
         public HomeDelivery(Curiers Curier, TimeOnly ClientWishTimeFrom, TimeOnly ClientWishTimeTo, bool IsPOSNeeded, int EnterenceCode, byte Floor,
             bool IsLift, byte AmountOfDeliveryTry)
@@ -412,7 +418,7 @@
     class PickPointDelivery : Delivery
     {
         /* ... */
-        Partners PickPointPartner;
+        Partners<Company> PickPointPartner = new Partners<Company>();
         public string PickPointName;
         public string PickPointDescription;
         public string PickPointAdress;
@@ -431,7 +437,15 @@
     class ShopDelivery : Delivery
     {
         /* ... */
-
+        Partners<Company> ShopPartner = new Partners<Company>();
+        public string PickPointName;
+        public string PickPointDescription;
+        public string PickPointAdress;
+        public TimeOnly PickPointOpenDate;
+        public TimeOnly PickPointCloseDate;
+        public DateTime DeliveredToPickPoint;
+        public DateTime TakeParcelDeadLine;
+        public DateTime ReturnFromPickPoint;
         public ShopDelivery()
         {
 
