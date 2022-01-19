@@ -16,14 +16,14 @@
         public Delivery()
         {
             DeliveryId = 333000;
-            DeliveryOpenDate = new DateTime();
-            DeliveryDateTime = new DateTime();
+            DeliveryOpenDate = new DateTime(1998, 2, 4);
+            DeliveryDateTime = new DateTime(1977, 3, 8);
             ClientForDelivery = new Client();
             DeliveryAddress = "Delivery Address is unknown";
             DeliveryAmount = 0;
             DeliverySummPaied = 0;
             DeliveryOrderCurrency = new FiatCurrency();
-            DeliveryDescription = DeliveryDescription;
+            DeliveryDescription = "some Delivery for somebody";
             IsDelFullyPaied = DeliverySummPaied >= DeliveryAmount ? true : false;
         }
 
@@ -152,7 +152,7 @@
         }
         public Company(string name) : base(name)
         {
-            Director = new Human("Ivanov", "Ivan", "Ivanovich", new DateOnly(1997,10,19), true, 3); // Композиция
+            Director = new Human("Ivanov", "Ivan", "Ivanovich", new DateOnly(1997, 10, 19), true, 3); // Композиция
             Accounter = new Human("Jakovleva", "Svetlana", "Petrovna", new DateOnly(2000, 3, 19), true, 3);// Композиция
         }
 
@@ -282,7 +282,7 @@
 
         }
     }
-    
+
     public class Curiers<TClientType> : Partners<TClientType>
     {
         public TClientType Curier = default(TClientType);
@@ -297,8 +297,8 @@
 
         public Curiers()
         {
-           Curiers<TClientType> Curier = new Curiers<TClientType>();
-           
+            Curiers<TClientType> Curier = new Curiers<TClientType>();
+
         }
     }
 
@@ -400,7 +400,7 @@
         public bool IsLift;
         public byte AmountOfDeliveryTry;
 
-        public HomeDelivery()
+        public HomeDelivery() : base()
         {
             Curiers<TClientType> HomeCurier = new Curiers<TClientType>();
         }
@@ -434,7 +434,7 @@
         public DateTime TakeParcelDeadLine;
         public DateTime ReturnFromPickPoint;
 
-        public PickPointDelivery()
+        public PickPointDelivery() : base()
         {
 
         }
@@ -452,37 +452,34 @@
         public DateTime DeliveredToShop;
         public DateTime SellingPeriodFrom;
         public DateTime ReturnFromShop;
-        public ShopDelivery()
+        public ShopDelivery() : base()
         {
 
         }
     }
 
     public class Order<TDelivery, TShoppingCart> where TShoppingCart : ShoppingCart
-                                                   // where TDelivery : HomeDelivery 
+        // where TDelivery : HomeDelivery 
     {
         public int OrderNumber;
-        TDelivery Delivery;
+        TDelivery DeliveryOrder;
         TDelivery NewOrder;
         TShoppingCart NewOrderCart;
         public Order()
         {
             this.OrderNumber = 1;
-            TDelivery Delivery = new TDelivery();
-            Delivery<TDelivery> NewOrder = new Delivery<TDelivery>();
-            
-
-
-    }
-        public Order(int OrderNumber)
-            {
+            DeliveryOrder = default(TDelivery);
+            NewOrder = default(TDelivery);
+        }
+        public Order(int OrderNumber, TDelivery DeliveryOrder)
+        {
             this.OrderNumber = OrderNumber;
-             Delivery<TDelivery> Delivery = new Delivery<TDelivery>();
-            }
+            this.DeliveryOrder = DeliveryOrder;
+        }
 
         public void DisplayAddress()
         {
-            Console.WriteLine(NewOrder.DeliveryAddress);
+            Console.WriteLine(NewOrder.ToString);
         }
 
         // ... Другие поля
