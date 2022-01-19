@@ -1,6 +1,6 @@
 ﻿namespace InternetShop
 {
-    public abstract class Delivery 
+    public abstract class Delivery
     {
         protected int DeliveryId { get; set; }
         public DateTime DeliveryOpenDate { get; set; }
@@ -10,7 +10,7 @@
         private int DeliveryAmount { get; set; }
         protected int DeliverySummPaied { get; set; }
         public bool IsDelFullyPaied { get; set; }
-        protected Currency DeliveryOrderCurrency { get; set; }
+        protected static Currency DeliveryOrderCurrency { get; set; }
         public string DeliveryDescription { get; set; }
         public DateTime DeliveryCloseDate { get; set; }
         public Delivery()
@@ -52,7 +52,7 @@
 
     public class Payment
     {
-        public Currency PaymentCurrency { get; set; }
+        public static Currency PaymentCurrency { get; set; }
         protected int PaiedSummOfOrder { get; set; }
         protected int OrderSumm { get; set; }
         public DateTime PaymentDateTime { get; set; }
@@ -136,6 +136,8 @@
         public string BankAdress { get; set; }
         public int VATNumber { get; set; }
         public string RegistrationNumber { get; set; }
+        public static string State { get; set; } //этот статический элемент класса предпологает что работаем только внутри одной траны либо с компаниями из
+        //одной страны
 
         public Company() : base()
         {
@@ -148,6 +150,7 @@
             this.BankAdress = BankAdress;
             this.VATNumber = VATNumber;
             this.RegistrationNumber = RegistrationNumber;
+
 
         }
         public Company(string name) : base(name)
@@ -204,7 +207,7 @@
                 Salary = a.Salary + b.Salary
             };
         }
-
+    }
     public class Client : Human
     {
         public long ClientID
@@ -249,9 +252,13 @@
         private int CompanyClientAccountBalance { get; set; }
         public FiatCurrency CompanyClientAccountCurrency { get; set; }
         public string CompanyClientAccountName { get; set; }
-        public DateTime CompanyClientAccOpenDate { get; set; }
-        public int CompanyClientAccountAmount { get; set; }
+        protected DateTime CompanyClientAccOpenDate { get; set; }
+        public static long CompanyClientAccountAmount { get; set; }
 
+        static Client() //накручиваем статическим конструктором количество клиентов в компании
+        {
+            CompanyClientAccountAmount = 900000000000;
+        }
         public Client()
         {
             ClientID = 0;
@@ -482,7 +489,7 @@
     }
 
     public class Order<TDelivery, TShoppingCart> where TDelivery : Delivery where TShoppingCart : ShoppingCart
-        
+
     {
         public int OrderNumber;
         TDelivery DeliveryOrder;
@@ -563,40 +570,48 @@
         }
     }
 
-    class Programm
+    static class DateOnlyExtensions
     {
-        static void Main(string[] args)
+        public static DateOnly GetOneWeekMore(this DateOnly source)
         {
-            var array = new Product[]
-            {
-    new Product
-    {
-        ProductID = 1,
-        ProductName = "Computer",
-        ProductDescription = "Computer for gamers",
-        ProductCategory = "Home technic",
-        ProductCategoryID = 23,
-        ProductCategoryName = "Peaple hometechnik for person",
-        ProductCategoryDescription = "Home technic applayencies",
-        ProductPrice = 1000,
-
-    },
-    new Product
-    {
-            ProductID = 2,
-            ProductName = "Monitor",
-            ProductDescription = "Monitor for gamers",
-            ProductCategory = "Home Electronic",
-            ProductCategoryID = 30,
-            ProductCategoryName = "Peaple homeelectronic for person",
-            ProductCategoryDescription = "Home electronic applayencies",
-            ProductPrice = 500,
-    },
-            };
-            ShoppingCart cart = new ShoppingCart(array);
-
-            Product Product = cart[1];
+            return source[source.AddDays(7)];
         }
     }
 }
+        class Programm
+        {
+            static void Main(string[] args)
+            {
+                var array = new Product[]
+                {
+                new Product
+                {
+                    ProductID = 1,
+                    ProductName = "Computer",
+                    ProductDescription = "Computer for gamers",
+                    ProductCategory = "Home technic",
+                    ProductCategoryID = 23,
+                    ProductCategoryName = "Peaple hometechnik for person",
+                    ProductCategoryDescription = "Home technic applayencies",
+                    ProductPrice = 1000,
+
+                },
+                new Product
+                {
+                        ProductID = 2,
+                        ProductName = "Monitor",
+                        ProductDescription = "Monitor for gamers",
+                        ProductCategory = "Home Electronic",
+                        ProductCategoryID = 30,
+                        ProductCategoryName = "Peaple homeelectronic for person",
+                        ProductCategoryDescription = "Home electronic applayencies",
+                        ProductPrice = 500,
+                },
+                };
+                ShoppingCart cart = new ShoppingCart(array);
+
+                Product Product = cart[1];
+            }
+        }
+    
 
